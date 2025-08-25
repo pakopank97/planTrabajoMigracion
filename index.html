@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Interactivo: Plan de Migración de Oracle a PostgreSQL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page dashboard with a two-column layout. Left column for phase navigation buttons. Right column displays an interactive Gantt-style timeline chart and a dynamic content card that updates on-click. This structure provides a quick overview via the chart and allows users to drill down into phase details without scrolling, improving usability over a linear document. -->
+    <!-- Visualization & Content Choices: 1. Project Timeline: Report's duration table -> Goal: Visualize project flow -> Viz: Interactive Gantt-style horizontal bar chart -> Interaction: Highlight bar on phase selection -> Justification: More intuitive than a table -> Library: Chart.js/Canvas. 2. Phase Details: Report's text sections -> Goal: Show details on demand -> Method: Dynamic HTML content card -> Interaction: Content updates on button click -> Justification: Reduces clutter, focuses user attention -> Library: Vanilla JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .nav-button.active {
+            background-color: #2563eb;
+            color: white;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Plan de Migración: Oracle a PostgreSQL</h1>
+            <p class="text-lg text-gray-600 mt-2">Panel de control interactivo del proyecto</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Duración Total</p>
+                    <p class="text-2xl font-bold text-blue-600">44 Semanas</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Volumen de Datos</p>
+                    <p class="text-2xl font-bold text-blue-600">16 TB</p>
+                </div>
+                <div class="bg-blue-100 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7l8 4.5 8-4.5M12 16.5V21" /></svg>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between md:col-span-1 lg:col-span-2">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Herramienta Principal</p>
+                    <p class="text-2xl font-bold text-blue-600">ora2pg</p>
+                </div>
+                 <div class="bg-blue-100 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </div>
+            </div>
+        </div>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <nav id="phase-navigation" class="lg:col-span-1 bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2">Fases del Proyecto</h2>
+                <div class="space-y-2">
+                </div>
+            </nav>
+
+            <div class="lg:col-span-2 space-y-8">
+                <section class="bg-white p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold mb-4">Cronograma General del Proyecto</h2>
+                    <div class="chart-container">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </section>
+
+                <section id="phase-details" class="bg-white p-6 rounded-xl shadow-md min-h-[300px]">
+                    
+                </section>
+            </div>
+        </main>
+        
+        <footer class="mt-8 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4">Análisis de Riesgos y Mitigación</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Riesgo</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Impacto</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan de Mitigación</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Incompatibilidad de funcionalidades</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Alto</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Análisis exhaustivo en Fase 1. Buscar soluciones alternativas o reescribir lógica en la aplicación.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Bajo rendimiento post-migración</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Alto</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Pruebas de carga exhaustivas. DBAs expertos listos para optimizar consultas e índices.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Corrupción o pérdida de datos</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Crítico</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Validaciones de datos en cada etapa. Plan de rollback sólido y copias de seguridad verificadas.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">El tiempo de inactividad excede la ventana</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Alto</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Realizar múltiples simulacros (dry-runs) para optimizar y cronometrar el proceso de cutover.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Retrasos en la conversión de código</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Medio</span></td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Asignar recursos de desarrollo con experiencia. Priorizar los objetos de código más críticos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const projectPhases = [
+                { id: 1, name: 'Fase 1: Planificación y Análisis', duration: 5, start: 0, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Planificación y Análisis (5 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Definición de Alcance:</strong> Reuniones con stakeholders para definir objetivos de negocio y técnicos.</li>
+                        <li><strong>Evaluación de Origen:</strong> Análisis del esquema Oracle, inventario de código PL/SQL y dependencias.</li>
+                        <li><strong>Diseño de Destino:</strong> Selección de servidor (PowerEdge, ProLiant, ThinkSystem), diseño de HA con replicación por streaming y configuración de almacenamiento NVMe en RAID 10.</li>
+                        <li><strong>Selección de Herramientas:</strong> Se confirma el uso de <strong>ora2pg</strong> para esquema/código y <strong>pg_loader/COPY</strong> para datos.</li>
+                        <li><strong>Plan de Pruebas:</strong> Definición de estrategias para pruebas funcionales, de rendimiento e integración.</li>
+                    </ul>` },
+                { id: 2, name: 'Fase 2: Preparación del Entorno', duration: 4, start: 5, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Preparación del Entorno (4 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Instalación de Servidor Físico:</strong> Recepción, instalación en centro de datos y configuración de SO y red.</li>
+                        <li><strong>Configuración de Almacenamiento:</strong> Creación del arreglo de discos RAID 10 para máximo rendimiento.</li>
+                        <li><strong>Instalación de PostgreSQL:</strong> Despliegue del motor de base de datos y ajuste de parámetros de rendimiento.</li>
+                        <li><strong>Instalación de Herramientas:</strong> Configuración de <strong>ora2pg</strong> en un servidor de migración dedicado.</li>
+                    </ul>` },
+                { id: 3, name: 'Fase 3: Migración de Esquema y Código', duration: 8, start: 9, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Migración de Esquema y Código (8 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Análisis con ora2pg:</strong> Generación de informe de evaluación para estimar el esfuerzo manual.</li>
+                        <li><strong>Conversión de Esquema (DDL):</strong> Uso de ora2pg para generar el DDL y posterior ajuste manual.</li>
+                        <li><strong>Migración de Código (PL/SQL a PL/pgSQL):</strong> Conversión automática inicial con ora2pg, seguida de un <strong>esfuerzo manual intensivo</strong> por parte de los desarrolladores para refactorizar y probar el código complejo.</li>
+                    </ul>` },
+                { id: 4, name: 'Fase 4: Migración de Datos y Pruebas', duration: 14, start: 17, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Migración de Datos y Pruebas (14 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Primera Carga Masiva (Offline):</strong> Exportación de 16 TB de datos a archivos CSV usando ora2pg.</li>
+                        <li><strong>Importación Masiva:</strong> Uso del comando <strong>\\copy de psql</strong> o <strong>pg_loader</strong> para una importación de alto rendimiento.</li>
+                        <li><strong>Estrategia de Sincronización (Delta):</strong> Desarrollo de scripts para migrar solo los datos cambiados durante la ventana de corte, ya que ora2pg no tiene CDC nativo.</li>
+                        <li><strong>Validación y Pruebas:</strong> Ejecución de pruebas de rendimiento y validación de integridad de datos.</li>
+                    </ul>` },
+                { id: 5, name: 'Fase 5: Pruebas Exhaustivas y Simulacros', duration: 8, start: 31, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Pruebas Exhaustivas y Simulacros (8 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Pruebas de Integración y Funcionales:</strong> El equipo de QA y usuarios de negocio prueban las aplicaciones contra la nueva base de datos.</li>
+                        <li><strong>Pruebas de Carga y Estrés:</strong> Simulación de la carga de trabajo de producción para verificar la estabilidad.</li>
+                        <li><strong>Simulacros de Puesta en Producción (Dry-runs):</strong> Realización de al menos dos ensayos completos del proceso de corte para cronometrar cada paso y refinar el procedimiento.</li>
+                    </ul>` },
+                { id: 6, name: 'Fase 6: Puesta en Producción (Go-Live)', duration: 1, start: 39, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Puesta en Producción (1 semana / 48-72h efectivas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Inicio del Downtime:</strong> Detención de todas las aplicaciones conectadas a la base de datos.</li>
+                        <li><strong>Migración Delta Final:</strong> Ejecución de los scripts para migrar los últimos cambios de datos.</li>
+                        <li><strong>Validación Final:</strong> Verificación final de la integridad de los datos.</li>
+                        <li><strong>Redirección de Aplicaciones:</strong> Cambio de las cadenas de conexión para apuntar a PostgreSQL.</li>
+                        <li><strong>Arranque y Monitoreo:</strong> Puesta en línea de las aplicaciones y monitoreo intensivo.</li>
+                    </ul>` },
+                { id: 7, name: 'Fase 7: Post-Migración', duration: 4, start: 40, details: `
+                    <h3 class="text-lg font-bold text-blue-700 mb-2">Post-Migración (4 semanas)</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>Soporte Post-Lanzamiento:</strong> Un equipo dedicado a resolver cualquier incidencia que surja.</li>
+                        <li><strong>Optimización de Rendimiento:</strong> Análisis del rendimiento en producción y realización de ajustes finos.</li>
+                        <li><strong>Desmantelamiento de Oracle:</strong> Planificación del apagado y archivo de la antigua base de datos una vez que el nuevo sistema esté estable.</li>
+                        <li><strong>Documentación y Cierre:</strong> Finalización de la documentación y reunión de lecciones aprendidas.</li>
+                    </ul>` },
+            ];
+
+            const navContainer = document.querySelector('#phase-navigation .space-y-2');
+            const detailsContainer = document.getElementById('phase-details');
+            let timelineChart = null;
+
+            function updateDetails(phaseId) {
+                const phase = projectPhases.find(p => p.id === phaseId);
+                if (phase) {
+                    detailsContainer.innerHTML = phase.details;
+                }
+                
+                document.querySelectorAll('.nav-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.phaseId) === phaseId) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                updateChartHighlight(phaseId);
+            }
+
+            function updateChartHighlight(phaseId) {
+                if (!timelineChart) return;
+                const backgroundColors = timelineChart.data.datasets[0].backgroundColor;
+                const borderColors = timelineChart.data.datasets[0].borderColor;
+
+                for (let i = 0; i < projectPhases.length; i++) {
+                    if (projectPhases[i].id === phaseId) {
+                        backgroundColors[i] = 'rgba(37, 99, 235, 0.8)';
+                        borderColors[i] = 'rgba(37, 99, 235, 1)';
+                    } else {
+                        backgroundColors[i] = 'rgba(59, 130, 246, 0.5)';
+                        borderColors[i] = 'rgba(59, 130, 246, 1)';
+                    }
+                }
+                timelineChart.update();
+            }
+
+            projectPhases.forEach(phase => {
+                const button = document.createElement('button');
+                button.className = 'nav-button w-full text-left p-3 rounded-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500';
+                button.textContent = phase.name;
+                button.dataset.phaseId = phase.id;
+                button.addEventListener('click', () => updateDetails(phase.id));
+                navContainer.appendChild(button);
+            });
+
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            const chartData = {
+                labels: projectPhases.map(p => p.name.split(':')[1].trim()),
+                datasets: [{
+                    label: 'Duración (Semanas)',
+                    data: projectPhases.map(p => [p.start, p.start + p.duration]),
+                    backgroundColor: projectPhases.map(() => 'rgba(59, 130, 246, 0.5)'),
+                    borderColor: projectPhases.map(() => 'rgba(59, 130, 246, 1)'),
+                    borderWidth: 1,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.7,
+                    borderSkipped: false,
+                }]
+            };
+
+            timelineChart = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Semanas del Proyecto'
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(200, 200, 200, 0.1)'
+                            }
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const phase = projectPhases[context.dataIndex];
+                                    return ` ${phase.name.split(':')[0]}: Semanas ${phase.start + 1} a ${phase.start + phase.duration}. Duración: ${phase.duration} semanas.`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateDetails(1);
+        });
+    </script>
+</body>
+</html>
