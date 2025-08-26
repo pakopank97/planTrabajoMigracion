@@ -153,7 +153,12 @@
                 { id: 2, name: 'Fase 2: Preparación del Entorno', duration: 4, start: 5, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Preparación del Entorno (4 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Instalación de Servidor Físico:</strong> Recepción, instalación en centro de datos y configuración de SO y red.</li>
+                        <li><strong>Instalación de Servidor Físico y SO:</strong> Recepción e instalación en el centro de datos. Para el Sistema Operativo de licencia libre, se recomiendan dos opciones principales:
+                            <ul class="list-['-_'] list-inside ml-6 mt-1 space-y-1">
+                                <li><strong>Rocky Linux 9 (o AlmaLinux):</strong> Recomendado por su estabilidad y compatibilidad a nivel empresarial.</li>
+                                <li><strong>Ubuntu Server LTS:</strong> Una opción igualmente viable y robusta, con una gran comunidad, soporte y paquetería más actualizada.</li>
+                            </ul>
+                        </li>
                         <li><strong>Configuración de Almacenamiento:</strong> Creación del arreglo de discos RAID 10 para máximo rendimiento.</li>
                         <li><strong>Instalación de PostgreSQL:</strong> Despliegue del motor de base de datos y ajuste de parámetros de rendimiento.</li>
                         <li><strong>Instalación de Herramientas:</strong> Configuración de <strong>ora2pg</strong> en un servidor de migración dedicado.</li>
@@ -192,7 +197,7 @@
                 { id: 7, name: 'Fase 7: Post-Migración', duration: 4, start: 40, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Post-Migración (4 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Soporte Post-Lanzamiento:</strong> Un equipo dedicado a resolver cualquier incidencia que surja.</li>
+                        <li><strong>Soport-Lanzamiento:</strong> Un equipo dedicado a resolver cualquier incidencia que surja.</li>
                         <li><strong>Optimización de Rendimiento:</strong> Análisis del rendimiento en producción y realización de ajustes finos.</li>
                         <li><strong>Desmantelamiento de Oracle:</strong> Planificación del apagado y archivo de la antigua base de datos una vez que el nuevo sistema esté estable.</li>
                         <li><strong>Documentación y Cierre:</strong> Finalización de la documentación y reunión de lecciones aprendidas.</li>
