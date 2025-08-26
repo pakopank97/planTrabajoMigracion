@@ -94,6 +94,23 @@
             </div>
         </main>
         
+        <section class="mt-8 bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold mb-4">Recomendación: Herramientas Comerciales para Acelerar la Migración</h2>
+            <p class="text-gray-600 mb-4">Una posible opción que ayuda en tiempos y errores en la migración, por la gran cantidad de datos (16 TB), es el uso de herramientas comerciales. La principal ventaja es la capacidad de **Replicación Continua de Datos (CDC)**, que minimiza la ventana de inactividad de días a solo unas pocas horas.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-bold text-lg">ESF Database Migration Toolkit</h3>
+                    <p class="text-sm text-gray-500 mt-1">Herramienta con licencia por tiempo limitado. Ideal para un proyecto con fecha de fin definida.</p>
+                    <p class="mt-3"><span class="font-semibold">Costo Aproximado:</span> Desde <span class="text-blue-600 font-bold">$396 USD</span> por una licencia de corto plazo.</p>
+                </div>
+                <div class="border p-4 rounded-lg">
+                    <h3 class="font-bold text-lg">EDB Migration Toolkit</h3>
+                    <p class="text-sm text-gray-500 mt-1">Incluido en la suscripción de EDB Postgres. Ofrece un ecosistema completo y soporte empresarial.</p>
+                    <p class="mt-3"><span class="font-semibold">Costo Aproximado:</span> Basado en cotización personalizada (según # de cores y nivel de soporte).</p>
+                </div>
+            </div>
+        </section>
+
         <footer class="mt-8 bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-xl font-bold mb-4">Análisis de Riesgos y Mitigación</h2>
             <div class="overflow-x-auto">
@@ -124,7 +141,7 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">El tiempo de inactividad excede la ventana</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Alto</span></td>
-                            <td class="px-6 py-4 text-sm text-gray-500">Realizar múltiples simulacros (dry-runs) para optimizar y cronometrar el proceso de cutover.</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Realizar múltiples simulacros (dry-runs) para optimizar y cronometrar el proceso de cutover. Considerar herramientas con CDC.</td>
                         </tr>
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Retrasos en la conversión de código</td>
