@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -232,7 +232,75 @@
                         </div>
                         <div>
                             <h4 class="font-semibold text-gray-800">Migración de Código (PL/SQL a PL/pgSQL)</h4>
-                            <p>Conversión automática inicial, seguida de un <strong>esfuerzo manual intensivo</strong> para refactorizar y probar el código complejo.</p>
+                            <p>Esta es a menudo la parte más compleja y que consume más tiempo. Mientras que <code>ora2pg</code> realiza una conversión automática inicial, el resultado casi siempre requiere una revisión y refactorización manual significativa debido a las diferencias sutiles pero importantes entre ambos lenguajes procedurales.</p>
+                            <ul class="list-decimal list-inside ml-4 mt-3 space-y-4">
+                                <li><strong>Revisión de la Lógica Convertida:</strong> Se analiza cada procedimiento y función convertida para asegurar que la lógica de negocio se mantiene intacta.</li>
+                                <li><strong>Refactorización Manual y Ejemplos:</strong> Se ajustan manualmente las incompatibilidades y se optimiza el código para aprovechar las fortalezas de PostgreSQL. A continuación se muestran algunos ejemplos comunes:
+                                    <div class="mt-3 space-y-4">
+                                        <div>
+                                            <p class="font-semibold text-sm text-indigo-700">Ejemplo 1: Sintaxis de Función y Retorno</p>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
+                                                <div>
+                                                    <p class="text-xs font-medium text-gray-500">Oracle (PL/SQL)</p>
+                                                    <div class="code-block">CREATE OR REPLACE FUNCTION get_employee_name(p_id NUMBER)
+RETURN VARCHAR2 IS
+  v_name VARCHAR2(100);
+BEGIN
+  SELECT nombre INTO v_name FROM empleados WHERE id_empleado = p_id;
+  RETURN v_name;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+END;</div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs font-medium text-gray-500">PostgreSQL (PL/pgSQL)</p>
+                                                    <div class="code-block">CREATE OR REPLACE FUNCTION get_employee_name(p_id NUMERIC)
+RETURNS VARCHAR AS $$
+DECLARE
+  v_name VARCHAR(100);
+BEGIN
+  SELECT nombre INTO v_name FROM empleados WHERE id_empleado = p_id;
+  RETURN v_name;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-sm text-indigo-700">Ejemplo 2: Funciones Nativas y Transacciones</p>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
+                                                <div>
+                                                    <p class="text-xs font-medium text-gray-500">Oracle (PL/SQL)</p>
+                                                    <div class="code-block">-- Uso de NVL y SYSDATE
+UPDATE empleados
+SET salario = NVL(salario_bono, 0)
+WHERE fecha_contrato < SYSDATE - 365;
+
+-- Transacción autónoma para logs
+PRAGMA AUTONOMOUS_TRANSACTION;
+INSERT INTO logs VALUES (...);
+COMMIT;</div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs font-medium text-gray-500">PostgreSQL (PL/pgSQL)</p>
+                                                    <div class="code-block">-- Se usa COALESCE y CURRENT_TIMESTAMP
+UPDATE empleados
+SET salario = COALESCE(salario_bono, 0)
+WHERE fecha_contrato < CURRENT_TIMESTAMP - INTERVAL '1 year';
+
+-- No existe PRAGMA. Se maneja en la
+-- aplicación o con dblink para simularlo.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><strong>Pruebas Unitarias:</strong> Cada unidad de código (función, procedimiento, trigger) se prueba de forma aislada para verificar su correcto funcionamiento antes de la integración completa.</li>
+                            </ul>
                         </div>
                     </div>
                     ` },
