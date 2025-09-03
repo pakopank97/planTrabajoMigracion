@@ -235,7 +235,7 @@
                             <p>Esta es a menudo la parte más compleja y que consume más tiempo. Mientras que <code>ora2pg</code> realiza una conversión automática inicial, el resultado casi siempre requiere una revisión y refactorización manual significativa debido a las diferencias sutiles pero importantes entre ambos lenguajes procedurales.</p>
                             <ul class="list-decimal list-inside ml-4 mt-3 space-y-4">
                                 <li><strong>Revisión de la Lógica Convertida:</strong> Se analiza cada procedimiento y función convertida para asegurar que la lógica de negocio se mantiene intacta.</li>
-                                <li><strong>Refactorización Manual y Ejemplos:</strong> Se ajustan manualmente las incompatibilidades y se optimiza el código para aprovechar las fortalezas de PostgreSQL. A continuación se muestran algunos ejemplos comunes:
+                                <li><strong>Refactorización Manual y Ejemplos:</strong> Se ajustan manually las incompatibilidades y se optimiza el código para aprovechar las fortalezas de PostgreSQL. A continuación se muestran algunos ejemplos comunes:
                                     <div class="mt-3 space-y-4">
                                         <div>
                                             <p class="font-semibold text-sm text-indigo-700">Ejemplo 1: Sintaxis de Función y Retorno</p>
@@ -306,12 +306,82 @@ WHERE fecha_contrato < CURRENT_TIMESTAMP - INTERVAL '1 year';
                     ` },
                 { id: 4, name: 'Fase 4: Migración de Datos y Pruebas', duration: 14, start: 17, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Migración de Datos y Pruebas (14 semanas)</h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Primera Carga Masiva (Offline):</strong> Exportación de 16 TB de datos a archivos CSV usando ora2pg.</li>
-                        <li><strong>Importación Masiva:</strong> Uso del comando <strong>\\copy de psql</strong> o <strong>pg_loader</strong> para una importación de alto rendimiento.</li>
-                        <li><strong>Estrategia de Sincronización (Delta):</strong> Desarrollo de scripts para migrar solo los datos cambiados durante la ventana de corte, ya que ora2pg no tiene CDC nativo.</li>
-                        <li><strong>Validación y Pruebas:</strong> Ejecución de pruebas de rendimiento y validación de integridad de datos.</li>
-                    </ul>` },
+                    <div class="space-y-6 text-gray-600">
+                        <div>
+                            <h4 class="font-semibold text-gray-800">1. Primera Carga Masiva (Bulk Load)</h4>
+                            <p>El objetivo es transferir el grueso de los 16 TB de la forma más rápida y eficiente posible. Esto se realiza con la base de datos de destino (PostgreSQL) en un estado "mínimo" para acelerar la carga.</p>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                                <li><strong>Proceso de Exportación:</strong> Se utiliza <code>ora2pg</code> configurado para exportar únicamente datos (<code>TYPE DATA</code>). Para maximizar el rendimiento, se paraleliza la exportación utilizando el flag <code>-j</code>, lanzando múltiples procesos que trabajan sobre distintas tablas o particiones simultáneamente. El formato de salida preferido es <code>COPY</code>, nativo de PostgreSQL, por ser más rápido que CSV.</li>
+                                <li><strong>Ejemplo de Comando de Exportación:</strong>
+                                    <div class="code-block mt-1"># Exporta datos de todas las tablas en paralelo usando 16 procesos
+ora2pg -t COPY -o data.sql -b /mnt/export_data -c /etc/ora2pg.conf -j 16</div>
+                                </li>
+                                <li><strong>Preparación del Destino:</strong> Antes de importar, se deshabilitan temporalmente en PostgreSQL todas las constraints (<code>FOREIGN KEY</code>, <code>CHECK</code>), triggers e índices no primarios. Esto evita la sobrecarga de validar cada fila durante la inserción y permite una carga de datos mucho más rápida.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">2. Importación Masiva de Alto Rendimiento</h4>
+                            <p>Una vez generados los archivos de datos, se importan en PostgreSQL. Se prefiere <code>pg_loader</code> sobre el comando <code>\copy</code> de <code>psql</code> por su capacidad superior de paralelización y manejo de errores.</p>
+                             <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                                <li><strong>Proceso de Importación con pg_loader:</strong> Esta herramienta puede leer los archivos generados y cargar los datos en PostgreSQL utilizando múltiples workers en paralelo. Puede manejar la conversión de tipos de datos al vuelo y ofrece un control transaccional robusto.</li>
+                                <li><strong>Ejemplo de Archivo de Comando para pg_loader:</strong>
+                                    <div class="code-block mt-1">-- load_data.load
+LOAD DATABASE
+    FROM oracle://user:pass@oracle_host:1521/SERVICE_NAME
+    INTO postgresql://user:pass@postgres_host:5432/target_db
+WITH
+    workers = 8, concurrency = 4,
+    batch size = 25MB,
+    disable triggers,
+    data only
+ALTER SCHEMA 'HR' RENAME TO 'human_resources';</div>
+                                </li>
+                                <li><strong>Post-Importación:</strong> Tras finalizar la carga, se reconstruyen todos los índices, se habilitan nuevamente los triggers y se validan las constraints. Este proceso de "reconstrucción" es significativamente más rápido que validarlos durante la carga.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">3. Estrategia de Sincronización Delta</h4>
+                            <p>Dado que la carga inicial puede tardar días, es necesario capturar los cambios que ocurren en Oracle durante ese tiempo. Sin una herramienta de CDC, se debe implementar una solución manual.</p>
+                            <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                                <li><strong>Enfoque con Triggers (Recomendado):</strong> Antes de iniciar la carga masiva, se crean triggers en las tablas clave de Oracle. Estos triggers registran cada <code>INSERT</code>, <code>UPDATE</code> y <code>DELETE</code> en tablas de auditoría ("journal tables"), guardando la clave primaria y el tipo de operación.</li>
+                                <li><strong>Ejemplo de Trigger de Auditoría en Oracle:</strong>
+                                     <div class="code-block mt-1">CREATE OR REPLACE TRIGGER aud_empleados_trg
+AFTER INSERT OR UPDATE OR DELETE ON empleados
+FOR EACH ROW
+BEGIN
+    IF INSERTING THEN
+        INSERT INTO aud_log (table_name, pk_id, op_type, op_time)
+        VALUES ('empleados', :new.id_empleado, 'I', SYSDATE);
+    ELSIF UPDATING THEN
+        INSERT INTO aud_log (table_name, pk_id, op_type, op_time)
+        VALUES ('empleados', :new.id_empleado, 'U', SYSDATE);
+    ELSIF DELETING THEN
+        INSERT INTO aud_log (table_name, pk_id, op_type, op_time)
+        VALUES ('empleados', :old.id_empleado, 'D', SYSDATE);
+    END IF;
+END;</div>
+                                </li>
+                                <li><strong>Aplicación del Delta:</strong> Durante la ventana de corte final, se exportan únicamente los datos de estas tablas de auditoría. Luego, se ejecutan scripts en PostgreSQL que leen estos logs y replican las operaciones (INSERT, UPDATE, DELETE) en la base de datos de destino.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">4. Validación de Datos y Pruebas</h4>
+                            <p>Es fundamental verificar que los datos se han migrado correctamente. Se realizan varias capas de validación.</p>
+                             <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                                <li><strong>Validación Cuantitativa:</strong> Se comparan los conteos de filas para cada tabla. Es la primera y más rápida comprobación.</li>
+                                <li><strong>Validación Cualitativa (Checksums):</strong> Para tablas críticas, se calculan funciones de agregación (como <code>SUM()</code>, <code>AVG()</code> en columnas numéricas o un checksum del a fila completa) en ambos sistemas para asegurar que los valores coinciden.</li>
+                                <li><strong>Ejemplo de Validación con SUM:</strong>
+                                    <div class="code-block mt-1">-- En Oracle:
+SELECT SUM(salario) FROM empleados;
+-- En PostgreSQL:
+SELECT SUM(salario) FROM empleados;
+-- Ambos resultados deben ser idénticos.</div>
+                                </li>
+                                <li><strong>Pruebas Funcionales:</strong> Se ejecutan pruebas de aplicación predefinidas sobre la base de datos migrada para asegurar que los procesos de negocio clave (ej. generar un reporte, procesar una transacción) funcionan como se esperaba y devuelven los mismos resultados.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    ` },
                 { id: 5, name: 'Fase 5: Pruebas Exhaustivas y Simulacros', duration: 8, start: 31, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Pruebas Exhaustivas y Simulacros (8 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
