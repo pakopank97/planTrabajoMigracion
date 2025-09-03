@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -32,6 +32,16 @@
             color: white;
             transform: scale(1.05);
         }
+        .code-block {
+            background-color: #eef2ff;
+            border-left: 4px solid #4f46e5;
+            padding: 12px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.875rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -63,14 +73,26 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-between md:col-span-1 lg:col-span-2">
-                <div>
+                <div class="flex-grow">
                     <p class="text-sm font-medium text-gray-500">Herramienta Principal</p>
-                    <p class="text-2xl font-bold text-blue-600">ora2pg</p>
+                    <div class="flex items-center space-x-3 mt-1">
+                         <p class="text-2xl font-bold text-blue-600">ora2pg</p>
+                    </div>
                 </div>
-                 <div class="bg-blue-100 p-3 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <div class="flex items-center space-x-3">
+                    <button id="ora2pg-toggle" class="px-3 py-1.5 text-sm font-semibold text-blue-700 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors">Saber más</button>
+                    <a href="http://ora2pg.darold.net/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 text-sm font-semibold text-green-700 bg-green-100 rounded-full hover:bg-green-200 transition-colors">Página Oficial</a>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                   </div>
                 </div>
             </div>
+        </div>
+        
+        <div id="ora2pg-info" class="hidden bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-6 rounded-r-lg mb-8 transition-all duration-300" role="alert">
+            <h3 class="font-bold text-lg">¿Qué es ora2pg?</h3>
+            <p class="mt-2">ora2pg es una herramienta de migración de bases de datos de código abierto, escrita en Perl, que se utiliza para convertir una base de datos Oracle a un esquema compatible con PostgreSQL. Es altamente configurable y puede exportar el esquema completo (tablas, vistas, secuencias, etc.), así como los datos. Es la herramienta estándar de la industria para este tipo de migraciones.</p>
+            <a href="https://github.com/darold/ora2pg" target="_blank" rel="noopener noreferrer" class="inline-block mt-3 text-sm font-semibold text-blue-600 hover:underline">Ver proyecto en GitHub &rarr;</a>
         </div>
 
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -94,23 +116,6 @@
             </div>
         </main>
         
-        <section class="mt-8 bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-bold mb-4">Recomendación: Herramientas Comerciales para Acelerar la Migración</h2>
-            <p class="text-gray-600 mb-4">Una posible opción que ayuda en tiempos y errores en la migración, por la gran cantidad de datos (16 TB), es el uso de herramientas comerciales. La principal ventaja es la capacidad de **Replicación Continua de Datos (CDC)**, que minimiza la ventana de inactividad de días a solo unas pocas horas.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="border p-4 rounded-lg">
-                    <h3 class="font-bold text-lg">ESF Database Migration Toolkit</h3>
-                    <p class="text-sm text-gray-500 mt-1">Herramienta con licencia por tiempo limitado. Ideal para un proyecto con fecha de fin definida.</p>
-                    <p class="mt-3"><span class="font-semibold">Costo Aproximado:</span> Desde <span class="text-blue-600 font-bold">$396 USD</span> por una licencia de corto plazo.</p>
-                </div>
-                <div class="border p-4 rounded-lg">
-                    <h3 class="font-bold text-lg">EDB Migration Toolkit</h3>
-                    <p class="text-sm text-gray-500 mt-1">Incluido en la suscripción de EDB Postgres. Ofrece un ecosistema completo y soporte empresarial.</p>
-                    <p class="mt-3"><span class="font-semibold">Costo Aproximado:</span> Basado en cotización personalizada (según # de cores y nivel de soporte).</p>
-                </div>
-            </div>
-        </section>
-
         <footer class="mt-8 bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-xl font-bold mb-4">Análisis de Riesgos y Mitigación</h2>
             <div class="overflow-x-auto">
@@ -141,7 +146,7 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">El tiempo de inactividad excede la ventana</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Alto</span></td>
-                            <td class="px-6 py-4 text-sm text-gray-500">Realizar múltiples simulacros (dry-runs) para optimizar y cronometrar el proceso de cutover. Considerar herramientas con CDC.</td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Realizar múltiples simulacros (dry-runs) para optimizar y cronometrar el proceso de cutover.</td>
                         </tr>
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Retrasos en la conversión de código</td>
@@ -161,32 +166,76 @@
                 { id: 1, name: 'Fase 1: Planificación y Análisis', duration: 5, start: 0, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Planificación y Análisis (5 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Definición de Alcance:</strong> Reuniones con stakeholders para definir objetivos de negocio y técnicos.</li>
+                        <li><strong>Definición de Alcance:</strong> Reuniones con stakeholders para definir los requerimientos de información y los objetivos técnicos del proyecto.</li>
                         <li><strong>Evaluación de Origen:</strong> Análisis del esquema Oracle, inventario de código PL/SQL y dependencias.</li>
-                        <li><strong>Diseño de Destino:</strong> Selección de servidor (PowerEdge, ProLiant, ThinkSystem), diseño de HA con replicación por streaming y configuración de almacenamiento NVMe en RAID 10.</li>
+                        <li><strong>Diseño de Destino:</strong> Diseño de la arquitectura virtual, incluyendo alta disponibilidad (HA) con replicación por streaming entre VMs.</li>
                         <li><strong>Selección de Herramientas:</strong> Se confirma el uso de <strong>ora2pg</strong> para esquema/código y <strong>pg_loader/COPY</strong> para datos.</li>
                         <li><strong>Plan de Pruebas:</strong> Definición de estrategias para pruebas funcionales, de rendimiento e integración.</li>
                     </ul>` },
                 { id: 2, name: 'Fase 2: Preparación del Entorno', duration: 4, start: 5, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Preparación del Entorno (4 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Instalación de Servidor Físico y SO:</strong> Recepción e instalación en el centro de datos. Para el Sistema Operativo de licencia libre, se recomiendan dos opciones principales:
+                        <li><strong>Aprovisionamiento del Servidor Virtual:</strong> Creación de una Máquina Virtual (VM) en la plataforma de virtualización de la empresa. Esto se puede realizar sobre un hipervisor como <strong>VMware vSphere</strong> (para entornos corporativos establecidos) o <strong>Proxmox VE</strong> (como una potente alternativa de código abierto). Se asignarán los recursos recomendados:
                             <ul class="list-['-_'] list-inside ml-6 mt-1 space-y-1">
-                                <li><strong>Rocky Linux 9 (o AlmaLinux):</strong> Recomendado por su estabilidad y compatibilidad a nivel empresarial.</li>
-                                <li><strong>Ubuntu Server LTS:</strong> Una opción igualmente viable y robusta, con una gran comunidad, soporte y paquetería más actualizada.</li>
+                                <li><strong>vCPU:</strong> 16 a 24 núcleos</li>
+                                <li><strong>RAM:</strong> 128 a 256 GB</li>
+                                <li><strong>Almacenamiento:</strong> 20-25 TB en NVMe de alta velocidad (usando passthrough)</li>
                             </ul>
                         </li>
-                        <li><strong>Configuración de Almacenamiento:</strong> Creación del arreglo de discos RAID 10 para máximo rendimiento.</li>
-                        <li><strong>Instalación de PostgreSQL:</strong> Despliegue del motor de base de datos y ajuste de parámetros de rendimiento.</li>
-                        <li><strong>Instalación de Herramientas:</strong> Configuración de <strong>ora2pg</strong> en un servidor de migración dedicado.</li>
+                        <li><strong>Instalación del SO en la VM:</strong> El sistema operativo seleccionado es <strong>Debian 12 "Bookworm"</strong>.</li>
+                        <li><strong>Instalación de PostgreSQL:</strong> Despliegue del motor de base de datos y ajuste de parámetros de rendimiento dentro de la VM.</li>
+                        <li><strong>Instalación de Herramientas:</strong> Configuración de <strong>ora2pg</strong> en un servidor de migración dedicado (puede ser otra VM).</li>
                     </ul>` },
                 { id: 3, name: 'Fase 3: Migración de Esquema y Código', duration: 8, start: 9, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Migración de Esquema y Código (8 semanas)</h3>
-                    <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Análisis con ora2pg:</strong> Generación de informe de evaluación para estimar el esfuerzo manual.</li>
-                        <li><strong>Conversión de Esquema (DDL):</strong> Uso de ora2pg para generar el DDL y posterior ajuste manual.</li>
-                        <li><strong>Migración de Código (PL/SQL a PL/pgSQL):</strong> Conversión automática inicial con ora2pg, seguida de un <strong>esfuerzo manual intensivo</strong> por parte de los desarrolladores para refactorizar y probar el código complejo.</li>
-                    </ul>` },
+                    <div class="space-y-4 text-gray-600">
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Análisis y Evaluación con ora2pg</h4>
+                            <p>Este es el primer paso técnico y fundamental. Antes de convertir cualquier objeto, se utiliza <strong>ora2pg en modo "evaluación"</strong> para generar un informe detallado que es crucial para la planificación:</p>
+                             <ul class="list-decimal list-inside ml-4 mt-2 space-y-1">
+                                <li><strong>Inventario de Objetos:</strong> Se obtiene un recuento completo de tablas, vistas, secuencias, particiones, triggers, procedimientos, etc.</li>
+                                <li><strong>Complejidad y "Coste" de Migración:</strong> La herramienta asigna una puntuación de "coste" (escala 1-5) a cada objeto. Este coste no se refiere a las especificaciones del servidor, sino al <strong>esfuerzo y complejidad</strong> necesarios para la migración. Identifica rápidamente los <strong>"puntos calientes"</strong>, que son aquellos objetos (procedimientos, funciones, etc.) con la puntuación más alta y que, por lo tanto, requerirán el mayor trabajo manual de refactorización.</li>
+                                <li><strong>Detección de Incompatibilidades:</strong> El informe resalta el uso de funciones o características de Oracle sin equivalente directo en PostgreSQL, que necesitarán ser refactorizadas.</li>
+                                <li><strong>Estimación del Esfuerzo:</strong> Este informe es la base para estimar con mayor precisión el tiempo y los recursos necesarios para la conversión manual del código y los ajustes del esquema.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Conversión del Esquema (DDL)</h4>
+                            <p>Este proceso iterativo traduce la estructura de la base de datos basándose en el análisis previo. Incluye:</p>
+                            <ul class="list-decimal list-inside ml-4 mt-2 space-y-2">
+                                <li><strong>Generación Automática de Scripts:</strong> Se configura y ejecuta <code>ora2pg</code> para generar los archivos <code>.sql</code> con las sentencias <code>CREATE TABLE</code>, <code>CREATE VIEW</code>, etc., en sintaxis de PostgreSQL.</li>
+                                <li><strong>Revisión y Ajuste Manual:</strong> Un DBA revisa los scripts generados para realizar ajustes finos. Esto es crítico para asegurar la integridad y el rendimiento.
+                                <div class="mt-2">
+                                  <p class="font-semibold text-sm text-indigo-700">Ejemplo de Conversión de Tabla:</p>
+                                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
+                                      <div>
+                                          <p class="text-xs font-medium text-gray-500">Oracle DDL (Original)</p>
+                                          <div class="code-block">CREATE TABLE EMPLEADOS (
+    ID_EMPLEADO NUMBER(10) NOT NULL PRIMARY KEY,
+    NOMBRE VARCHAR2(100) NOT NULL,
+    FECHA_CONTRATO DATE DEFAULT SYSDATE
+);</div>
+                                      </div>
+                                      <div>
+                                          <p class="text-xs font-medium text-gray-500">PostgreSQL DDL (Convertido)</p>
+                                          <div class="code-block">CREATE TABLE EMPLEADOS (
+    ID_EMPLEADO NUMERIC(10) NOT NULL PRIMARY KEY,
+    NOMBRE VARCHAR(100) NOT NULL,
+    FECHA_CONTRATO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</div>
+                                      </div>
+                                  </div>
+                                </div>
+                                </li>
+                                <li><strong>Optimización de Índices:</strong> Se revisan los índices convertidos y se considera la creación de nuevos tipos de índices que ofrece PostgreSQL (ej. GIN, GiST) si son apropiados para las nuevas consultas.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Migración de Código (PL/SQL a PL/pgSQL)</h4>
+                            <p>Conversión automática inicial, seguida de un <strong>esfuerzo manual intensivo</strong> para refactorizar y probar el código complejo.</p>
+                        </div>
+                    </div>
+                    ` },
                 { id: 4, name: 'Fase 4: Migración de Datos y Pruebas', duration: 14, start: 17, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Migración de Datos y Pruebas (14 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
@@ -198,8 +247,8 @@
                 { id: 5, name: 'Fase 5: Pruebas Exhaustivas y Simulacros', duration: 8, start: 31, details: `
                     <h3 class="text-lg font-bold text-blue-700 mb-2">Pruebas Exhaustivas y Simulacros (8 semanas)</h3>
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
-                        <li><strong>Pruebas de Integración y Funcionales:</strong> El equipo de QA y usuarios de negocio prueban las aplicaciones contra la nueva base de datos.</li>
-                        <li><strong>Pruebas de Carga y Estrés:</strong> Simulación de la carga de trabajo de producción para verificar la estabilidad.</li>
+                        <li><strong>Pruebas de Integración y Funcionales:</strong> El equipo de QA valida que todas las aplicaciones se conecten y operen correctamente con la nueva base de datos.</li>
+                        <li><strong>Pruebas de Carga y Estrés:</strong> Simulación de la carga de trabajo de producción para verificar la estabilidad y el rendimiento del sistema.</li>
                         <li><strong>Simulacros de Puesta en Producción (Dry-runs):</strong> Realización de al menos dos ensayos completos del proceso de corte para cronometrar cada paso y refinar el procedimiento.</li>
                     </ul>` },
                 { id: 6, name: 'Fase 6: Puesta en Producción (Go-Live)', duration: 1, start: 39, details: `
@@ -216,7 +265,7 @@
                     <ul class="list-disc list-inside space-y-2 text-gray-600">
                         <li><strong>Soport-Lanzamiento:</strong> Un equipo dedicado a resolver cualquier incidencia que surja.</li>
                         <li><strong>Optimización de Rendimiento:</strong> Análisis del rendimiento en producción y realización de ajustes finos.</li>
-                        <li><strong>Desmantelamiento de Oracle:</strong> Planificación del apagado y archivo de la antigua base de datos una vez que el nuevo sistema esté estable.</li>
+                        <li><strong>Desmantelenos de Oracle:</strong> Planificación del apagado y archivo de la antigua base de datos una vez que el nuevo sistema esté estable.</li>
                         <li><strong>Documentación y Cierre:</strong> Finalización de la documentación y reunión de lecciones aprendidas.</li>
                     </ul>` },
             ];
@@ -321,6 +370,13 @@
                         }
                     }
                 }
+            });
+            
+            const ora2pgButton = document.getElementById('ora2pg-toggle');
+            const ora2pgInfo = document.getElementById('ora2pg-info');
+
+            ora2pgButton.addEventListener('click', () => {
+                ora2pgInfo.classList.toggle('hidden');
             });
 
             updateDetails(1);
